@@ -10,7 +10,7 @@ Take the CRUJRA data as downloaded (netCDF, sub-daily time resolution, one file 
 ## Requirements
 
 ### Hardware
-At daily resolution, these files will take up about 40 Gb each (uncompressed).  Therefore the plan is to do all the processing on ceremony, a massive memory memory here at BiK-F, so that entire files can be handled in memory.  To repeat this processing it will probably be necessary to have 
+At daily resolution, these files will take up about 40 Gb each (uncompressed).  Therefore the plan is to do all the processing on ceremony, a massive memory memory here at BiK-F, so that entire files can be handled in memory.  To repeat this processing it will probably be necessary to have a machine with many gigabytes (maybe 100?) of RAM.
 
 ### Software
 Most likely `cdo` and `nco` for processing the netcdf filkes .  The `cdo` package is installed onm ceremony, and I have a personal version of `nco` compiled on ceremony.  Also `bash`.
@@ -21,6 +21,28 @@ The requirements for the 'cf' input module of LPJ-GUESS is fairly strict in term
 1. **Re-ordering** the dimensions (lon, lat and time) so that time comes last.  This has the disadvantage that some programs will be confused by this non-standard ordering.
 2. **Chunking**  the data into chuncks which are much longer in time than in lon/lat.  This optimises the data for reading of time series, but maybe it is slower for reading spatial slices (ie looking at the maps in a viewer program).  See these two useful posts from Unidata (developers of netCDF) on chunking: [Chunking Data: Why it Matters](https://www.unidata.ucar.edu/blogs/developer/entry/chunking_data_why_it_matters) and [Chunking Data: Choosing Shapes](https://www.unidata.ucar.edu/blogs/developer/en/entry/chunking_data_choosing_shapes)
 3. **Reduced Lon/Lat Grid** This involves melting the lon and lat into a single dimensions.  This is the most effective in terms of disk space (and I think also read time) but the format is the least convenient to use and view from a human perspective. 
+
+I propose to implement the re-ordering option, but also perhaps to test the chunking option with different chunk sizes and shapes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Questions? Contact matthew.forrest@senckenberg.de
+
+
+
+
+
 
 
 
