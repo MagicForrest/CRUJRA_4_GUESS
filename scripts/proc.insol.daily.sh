@@ -9,14 +9,14 @@
 
 # first and last years to process
 first_year=1901
-last_year=1940 # 2017
+last_year=2017
 
 # variable names
 input_var="dswrf"
 output_var="insol"
 
 # method - first sum across the day to get the total incoming energy (J m-2 day-1) and then divide by seconds in the day to get average W m-2
-method="daysum"
+method="sum" # should be "mean" or "sum"
 daytoseconds=$((24*60*60)) 
 
 # metadata
@@ -41,12 +41,16 @@ do
     # "The Chain" (Got Big Love for The Chain)
     # - take daily sum
     # - divide by seconds in the day 
-    cdo -r -f nc4 divc,$daytoseconds -${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
+    cdo -r -f nc4 divc,$daytoseconds -day${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
 
     # update attributes
     ncrename -v ${input_var},${output_var} ${output_dir}/${output_var}.${year}.nc
     ncatted -O -a units,${output_var},m,c,"$units" ${output_dir}/${output_var}.${year}.nc
     ncatted -O -a standard_name,${output_var},c,c,${standard_name} ${output_dir}/${output_var}.${year}.nc
+
+    # also make the monthly files
+    cdo -r -f nc4 mon${method} ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.monthly.nc
+
 
     # rechunk
     #nccopy -w -c lon/3,lat/7,time/365 ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.rechunked.nc
@@ -66,9 +70,12 @@ ncpdq -F -O -a lat,lon,time  ${output_dir}/crujra.v1.1.${output_var}.std-orderin
 # combine the chunked ones
 #ncrcat -4  ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v1.1.${output_var}.365x3x7.nc
 
+# combine the monthly ones
+ncrcat -4  ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v1.1.${output_var}.monthly.nc
 
 # clean up
 rm ${output_dir}/${output_var}.????.nc
+rm ${output_dir}/${output_var}.????.monthly.nc
 #rm ${output_dir}/${output_var}.????.rechunked.nc
 
  

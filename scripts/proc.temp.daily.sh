@@ -6,17 +6,24 @@
 # re-ordered file (for fast reading in LPJ-GUESS) and a chunked file for testing
 #
 # Note that I have installed CDO version 1.9.2 and NCO 4.7.0 utilities locally to "~/local/bin/ 
+#
+# 2019-02-04 First attempt
+# 2019-02-07 Added monthly files (no chunking and standard ordering)
+# 
+
+
+
 
 # first and last years to process
 first_year=1901
-last_year=1902 # 2017
+last_year=2017
 
 # variable names
 input_var="tmp"
 output_var="temp"
 
-# method
-method="daymean"
+# method - should be "mean" or "sum"
+method="mean"
 
 # metadata
 units="K"
@@ -40,12 +47,15 @@ do
     # "The Chain" (Got Big Love for The Chain)
     # - take daily mean
     # - invert latitides
-    cdo -r -f nc4 ${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
+    cdo -r -f nc4 day${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
 
     # update attributes
     ncrename -v ${input_var},${output_var} ${output_dir}/${output_var}.${year}.nc
     ncatted -O -a units,${output_var},m,c,${units} ${output_dir}/${output_var}.${year}.nc
     ncatted -O -a standard_name,${output_var},c,c,${standard_name} ${output_dir}/${output_var}.${year}.nc
+
+    # also make the monthly files
+    cdo -r -f nc4 mon${method} ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.monthly.nc
 
     # rechunk
     #nccopy -w -c lon/3,lat/7,time/365 ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.rechunked.nc
@@ -65,9 +75,12 @@ ncpdq -F -O -a lat,lon,time  ${output_dir}/crujra.v1.1.${output_var}.std-orderin
 # combine the chunked ones
 #ncrcat -4  ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v1.1.${output_var}.365x3x7.nc
 
+# combine the monthly ones
+ncrcat -4  ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v1.1.${output_var}.monthly.nc
 
 # clean up
 rm ${output_dir}/${output_var}.????.nc
+rm ${output_dir}/${output_var}.????.monthly.nc
 #rm ${output_dir}/${output_var}.????.rechunked.nc
 
  
