@@ -5,7 +5,13 @@ Process CRUJRA (2018, v1.1) climate data for reading by LPJ-GUESS.
 This is a simple package to bundle up the scripts (and documentation!) for a relatively simple task of processing climate data for reading by LPJ-GUESS.  It is also should serve as a test case for building better practices in terms of reproducable science here in Senckenberg BiK-F (AG Hickler, AG Scheiter, Data and Modelling Centre and others).
 
 ## Aim
-Take the CRUJRA data as downloaded (netCDF, sub-daily time resolution, one file per variable per year) and process it to daily values, one netCDF file per variable, with data and meta-data ready for LPJ-GUESSes 'cf' input module.
+1. Take the CRUJRA data as downloaded (netCDF, sub-daily time resolution, one file per variable per year) and process it to daily values, one netCDF file per variable, with data and meta-data ready for LPJ-GUESSes 'cf' input module.
+
+2. Produce monthly files for convenience and testing.
+
+3. Calculate 'derivaed' climate quantities such as windspeed, relative humidity, VPD and 1hr fuel moisture.
+
+4. Test different chunking configurations (see below) 
 
 ## Requirements
 
