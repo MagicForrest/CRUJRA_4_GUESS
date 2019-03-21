@@ -54,7 +54,10 @@ Two next steps:
 
 Not sure what to do next.
 
-Testes
+### 2019-03-21
+
+**AN IMPORTANT LEARNING**  If you use the netCDF4 data model with cdo (ie "-f nc4") then the data is automatically chunked into 2D sheets in Lon-Lat.  This *really* bad for LPJ-GUESS.  Even if you re-order it, access time are horrible.  I will now test with 'netCDF4 classic' (which has some features of netCDF but not chunking) using "-f nc4c", hopefully this works.
+
 
 ### Future
 
