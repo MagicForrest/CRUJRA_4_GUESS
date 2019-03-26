@@ -7,7 +7,7 @@ This is a simple package to bundle up the scripts (and documentation!) for a rel
 ## Aim
 1. Take the CRUJRA data as downloaded (netCDF, sub-daily time resolution, one file per variable per year) and process it to daily values, one netCDF file per variable, with data and meta-data ready for LPJ-GUESSes 'cf' input module.  Note that for fast reading of the data in LPJ-GUESS, the dimensions should be re-ordered (see below).
 
-2. Calculate 'derived' climate quantities such as windspeed and relative humidity (for the SIMFIRE-BLAZE and SPITFIRE fire models).
+2. Calculate 'derived' climate quantities such as windspeed and relative humidity (for the SIMFIRE-BLAZE and SPITFIRE fire models).  Note in some high latitude gridcells relative humidity can go over 100% (sometimes even 1000%) so it is capped is capped at 99.99%.  I believe this is just a numeric artifact, at such low temperatures both actual vapour pressure and saturation vapour pressure are very small numbers.  For potentially various reasons (eg. error in the empirical approximation of saturation vapour pressure or precision effects and/or very small inconsistencies in the data), the actual vapour pressure exceeds the saturation vapour pressure.  And whilst this positive difference is very small, it is relatively large compared to the very small vapour values, hence the apparently 'super-saturated' air. 
 
 3. Produce monthly files for convenience and testing.
 
