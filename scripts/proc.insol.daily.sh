@@ -2,8 +2,8 @@
 
 # Matthew Forrest 2019-02-04
 #
-# This script is based on my previous script for CRUNCEP.  It should produce a 'standard' file (no re-ordering),
-# re-ordered file (for fast reading in LPJ-GUESS) and a chunked file for testing
+# This script is based on my previous script for CRUNCEP.  It should produce a 'standard' file (no re-ordering) and a
+# re-ordered file (for fast reading in LPJ-GUESS).
 #
 # Note that I have installed CDO version 1.9.2 and NCO 4.7.0 utilities locally to "~/local/bin/ 
 
@@ -41,7 +41,7 @@ do
     # "The Chain" (Got Big Love for The Chain)
     # - take daily sum
     # - divide by seconds in the day 
-    cdo -r -f nc4 divc,$daytoseconds -day${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
+    cdo -r divc,$daytoseconds -day${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
 
     # update attributes
     ncrename -v ${input_var},${output_var} ${output_dir}/${output_var}.${year}.nc
@@ -49,7 +49,7 @@ do
     ncatted -O -a standard_name,${output_var},c,c,${standard_name} ${output_dir}/${output_var}.${year}.nc
 
     # also make the monthly files
-    cdo -r -f nc4 mon${method} ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.monthly.nc
+    cdo -r mon${method} ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.monthly.nc
 
 
     # rechunk
@@ -62,16 +62,16 @@ done
 
 
 # combine the non-chunked ones
-ncrcat -4  ${output_dir}/${output_var}.????.nc   ${output_dir}/crujra.v1.1.${output_var}.std-ordering.nc
+ncrcat -O ${output_dir}/${output_var}.????.nc   ${output_dir}/crujra.v1.1.${output_var}.std-ordering.nc
 
 # re-order the above for fast LPJ-GUESS reading
 ncpdq -F -O -a lat,lon,time  ${output_dir}/crujra.v1.1.${output_var}.std-ordering.nc ${output_dir}/crujra.v1.1.${output_var}.nc 
 
 # combine the chunked ones
-#ncrcat -4  ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v1.1.${output_var}.365x3x7.nc
+#ncrcat -O ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v1.1.${output_var}.365x3x7.nc
 
 # combine the monthly ones
-ncrcat -4  ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v1.1.${output_var}.monthly.nc
+ncrcat -O ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v1.1.${output_var}.monthly.nc
 
 # clean up
 rm ${output_dir}/${output_var}.????.nc

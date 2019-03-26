@@ -2,8 +2,8 @@
 
 # Matthew Forrest 2019-02-04
 #
-# This script is based on my previous script for CRUNCEP.  It should produce a 'standard' file (no re-ordering),
-# re-ordered file (for fast reading in LPJ-GUESS) and a chunked file for testing
+# This script is based on my previous script for CRUNCEP.  It should produce a 'standard' file (no re-ordering) and a
+# re-ordered file (for fast reading in LPJ-GUESS).
 #
 # Note that I have installed CDO version 1.9.2 and NCO 4.7.0 utilities locally to "~/local/bin/ 
 #
@@ -17,6 +17,7 @@
 #  where SVP = saturation vapour pressure and AVP = actual vapour pressure (both in kPa)
 #
 #  Buck equation for SVP from T
+#  (note that this is the T > 0 approximation, using the T < 0 approximation where T < 0 gives more areas of relative humidity > 100% so is not optimal, although this is probably more of a numerical artefcat)
 #
 #  SVP =  0.61121 * exp(T*(18.678-(T/234.5))/(257.14+T)) ------------------------------------------------ (2)
 #  where T is in deg C, and gives SVP in kPa
@@ -77,7 +78,7 @@ do
     # - calculate relative humidity following equations above (note the specific humidity = spfh (not Q) and pressure = press (not P) since that is what they are called in the input data)    
     #   (also note that the preceeding underscores signifiy a temporary variable which is not to be stored in the final netCDF) 
     cdo  -r day${method} \
-     -expr,'_T=tmp-273.15; _SVP= 0.61121 * exp(_T*(18.678-(_T/234.5))/(257.14+_T)); _MR=spfh / (1.0 - spfh); _AVP=((pres/1000) * _MR) / (0.6221 + _MR); rhum=100*_AVP/_SVP;rhum=(rhum>99.99)?99.99:rhum'  ${output_dir}/temporary_rhum.${year}.nc  ${output_dir}/${output_var}.${year}.nc
+     -expr,'_T=tmp-273.15; _SVP=0.61121 * exp(_T*(18.678-(_T/234.5))/(257.14+_T)); _MR=spfh / (1.0 - spfh); _AVP=((pres/1000) * _MR) / (0.6221 + _MR); rhum=100*_AVP/_SVP;rhum=(rhum>99.99)?99.99:rhum'  ${output_dir}/temporary_rhum.${year}.nc  ${output_dir}/${output_var}.${year}.nc
     rm ${output_dir}/temporary_rhum.${year}.nc
 
     # update attributes
