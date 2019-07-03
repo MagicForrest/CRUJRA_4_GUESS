@@ -30,7 +30,11 @@ For simplicity, here I choose option 1., re-order the dimensions, however the sc
 
 ## Note on netCDF formats and chunking for netCDF
 
-Whilst re-ordering 'classic' netCDF files produces files for which time series for one gridcell can be read perfectly efficiently with LPJ-GUESS, using the netCDF4 data format seems to mess this up.  I think the reason is that netCDF4 files are *always* chunked due to their underlying data structure, and `cdo` chucks the data for optimal reading of spatial slices (see the links above for that is important).  Therefore when using netCDF4 formatted files for LPJ-GUESS, appropriate chunking becomes essential.  Note that this is currently inferred from model performance, not conclusively tested.  In summary, the safest thing to do is to stick with netCDF 'classic' with re-ordered dimensions as is done here.  Using netCDF4 with appropriately chunked data is in some way optimal (access advanced features of netCDF4 and fiels can be easily viewed), but not fully investigated yet.
+Whilst re-ordering 'classic' netCDF files produces files for which time series for one gridcell can be read perfectly efficiently with LPJ-GUESS, using the netCDF4 data format seems to mess this up.  I think the reason is that netCDF4 files are *always* chunked due to their underlying data structure, and `cdo` chucks the data for optimal reading of spatial slices (see the Unidata links above for that is important).  Therefore when using netCDF4 formatted files for LPJ-GUESS, appropriate chunking becomes essential.  Note that this is currently inferred from model performance, not conclusively tested.  In summary, the safest thing to do is to stick with netCDF 'classic' with re-ordered dimensions as is done here.  Using netCDF4 with appropriately chunked data is in some way optimal (access advanced features of netCDF4 and fiels can be easily viewed), but not fully investigated yet.
+
+## Timings
+
+The /docs folder also has a couple of notes and run timings for LPG-GUESS.  This is probably not translatable to other models.
 
 
 Questions? Contact matthew.forrest@senckenberg.de
