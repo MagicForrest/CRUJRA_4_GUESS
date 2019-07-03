@@ -1,5 +1,5 @@
 # CRUJRA_4_GUESS
-Process CRUJRA (2018, v1.1) climate data for reading by LPJ-GUESS.
+Process CRU-JRA55 (2019, v2.0) climate data for reading by LPJ-GUESS.
 
 ## Overview
 This is a simple package to bundle up the scripts (and documentation!) for a relatively simple task of processing climate data for reading by LPJ-GUESS.  For users of other vegetation models (particularly models running TRENDY simulations) this may also be useful, possibly with some minor  modifications.
@@ -14,7 +14,7 @@ This is a simple package to bundle up the scripts (and documentation!) for a rel
 ## Requirements
 
 ### Hardware
-At daily resolution, the final files take up about 40 Gb each (uncompressed).  I therefore processed the data on a massive memory memory machine here at Senckenberg BiK-F, so that entire files can be handled in memory.  To repeat this processing it will probably be necessary to have a machine with many gigabytes (maybe 50?) of RAM.  If the dimension re-ordering step (the ncpdq command) is not required, then it is possible the such large amounts of RAM will not be required. 
+At daily resolution, the final files take up about 42 Gb each (uncompressed).  I therefore processed the data on a massive memory memory machine here at Senckenberg BiK-F, so that entire files can be handled in memory.  To repeat this processing it will probably be necessary to have a machine with many gigabytes (maybe 50?) of RAM.  If the dimension re-ordering step (the ncpdq command) is not required, then it is possible the such large amounts of RAM will not be required. 
 
 ### Software
 Both `cdo` and `nco` for processing the netcdf files, also `bash` for the scripting.
@@ -26,7 +26,7 @@ The requirements for the 'cf' input module of LPJ-GUESS is fairly strict in term
 2. **Chunking**  the data into chuncks which are much longer in time than in lon/lat.  This optimises the data for reading of time series, but it is slower for reading spatial slices (ie looking at the maps in a viewer program).  See these two useful posts from Unidata (developers of netCDF) on chunking: [Chunking Data: Why it Matters](https://www.unidata.ucar.edu/blogs/developer/entry/chunking_data_why_it_matters) and [Chunking Data: Choosing Shapes](https://www.unidata.ucar.edu/blogs/developer/en/entry/chunking_data_choosing_shapes).
 3. **Reduced Lon/Lat Grid** This involves melting the lon and lat into a single dimension (with variables to look up the longitude and latitude).  This is the most effective in terms of disk space (and I think maybe also read time) but the format is the least convenient to use and view from a human perspective. 
 
-For simplicity, here I choose option 1., re-order the dimensions, however the scripts also make a files with the standard ordering for checking and visualisation (at the cost of writing another 40 Gb file per variable).
+For simplicity, here I choose option 1., re-order the dimensions, however the scripts also make a files with the standard ordering for checking and visualisation (at the cost of writing another 42 Gb file per variable).
 
 ## Note on netCDF formats and chunking for netCDF
 
