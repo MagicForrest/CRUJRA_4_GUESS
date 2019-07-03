@@ -9,7 +9,7 @@
 
 # first and last years to process
 first_year=1901
-last_year=2017
+last_year=2018
 
 # variable names
 input_var="dswrf"
@@ -24,8 +24,8 @@ units="W m-2"
 standard_name="surface_downwelling_shortwave_flux"
 
 # directories
-input_dir="/bigdata_local/mforrest/Climate/CRUJRA/v1.1/raw"
-output_dir="/bigdata_local/mforrest/Climate/CRUJRA/v1.1/processed"
+input_dir="/data/mforrest/Climate/CRUJRA/v2.0/raw"
+output_dir="/data/mforrest/Climate/CRUJRA/v2.0/processed"
 
 
 # --------------------------------------------------------------------------------
@@ -36,12 +36,12 @@ do
     echo $year
 
     # gunzip the bugger
-    gunzip ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc.gz
+    gunzip ${input_dir}/${input_var}/crujra.v2.0.5d.${input_var}.${year}.365d.noc.nc.gz
 
     # "The Chain" (Got Big Love for The Chain)
     # - take daily sum
     # - divide by seconds in the day 
-    cdo -r divc,$daytoseconds -day${method} ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
+    cdo -r divc,$daytoseconds -day${method} ${input_dir}/${input_var}/crujra.v2.0.5d.${input_var}.${year}.365d.noc.nc ${output_dir}/${output_var}.${year}.nc
 
     # update attributes
     ncrename -v ${input_var},${output_var} ${output_dir}/${output_var}.${year}.nc
@@ -56,22 +56,22 @@ do
     #nccopy -w -c lon/3,lat/7,time/365 ${output_dir}/${output_var}.${year}.nc ${output_dir}/${output_var}.${year}.rechunked.nc
 
     # re-gzip 
-    gzip ${input_dir}/crujra.V1.1.5d.${input_var}.${year}.365d.noc.nc
+    gzip ${input_dir}/${input_var}/crujra.v2.0.5d.${input_var}.${year}.365d.noc.nc
 
 done
 
 
 # combine the non-chunked ones
-ncrcat -O ${output_dir}/${output_var}.????.nc   ${output_dir}/crujra.v1.1.${output_var}.std-ordering.nc
+ncrcat -O ${output_dir}/${output_var}.????.nc   ${output_dir}/crujra.v2.0.${output_var}.std-ordering.nc
 
 # re-order the above for fast LPJ-GUESS reading
-ncpdq -F -O -a lat,lon,time  ${output_dir}/crujra.v1.1.${output_var}.std-ordering.nc ${output_dir}/crujra.v1.1.${output_var}.nc 
+ncpdq -F -O -a lat,lon,time  ${output_dir}/crujra.v2.0.${output_var}.std-ordering.nc ${output_dir}/crujra.v2.0.${output_var}.nc 
 
 # combine the chunked ones
-#ncrcat -O ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v1.1.${output_var}.365x3x7.nc
+#ncrcat -O ${output_dir}/${output_var}.????.rechunked.nc   ${output_dir}/crujra.v2.0.${output_var}.365x3x7.nc
 
 # combine the monthly ones
-ncrcat -O ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v1.1.${output_var}.monthly.nc
+ncrcat -O ${output_dir}/${output_var}.????.monthly.nc   ${output_dir}/crujra.v2.0.${output_var}.monthly.nc
 
 # clean up
 rm ${output_dir}/${output_var}.????.nc
